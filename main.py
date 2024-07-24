@@ -11,9 +11,9 @@ class MonitoringSoftware:
         self.timeout = timeout
         self.tempo_cpu = tempo_cpu
     
-    def monitorar_cpu(self): #      Essa é a função principal, que inicia o processo (abre o programa), monitora ele com base no tempo de CPU e timeout.
+    def abrir_programa(self): #      Essa é a função principal, que inicia o processo (abre o programa)
         #   Inicia o processo (abre o programa)
-        process_info = win32process.CreateProcess(
+        return win32process.CreateProcess(
             self.software,
             None,
             None,
@@ -24,6 +24,9 @@ class MonitoringSoftware:
             None,
             win32process.STARTUPINFO()
         )
+
+    def monitorar_cpu(self):
+        process_info = self.abrir_programa()
         
         #   Pega as informações do processo
         proc_handle, thread_handle, proc_id, thread_id = process_info
