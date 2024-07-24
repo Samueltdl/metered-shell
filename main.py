@@ -36,24 +36,30 @@ class MonitoringSoftware:
         total_cpu_time = 0
         
         #   Aguarda o fechamento do programa, ou encerramento pelo timeout.
-        result = win32event.WaitForSingleObject(proc_handle, self.timeout)
-        
+        time_out_max = self.timeout
         #   Loop que monitora o tempo de CPU, e encerra o programa caso chegue ao máximo.
         while True:
             #   Pega a soma do tempo de CPU para user e system e armazena no total
+            
             cpu_time_user = process.cpu_times().user
             cpu_time_system = process.cpu_times().system
             total_cpu_time += cpu_time_user+cpu_time_system
             print(f"Tempo de CPU: {total_cpu_time}")
+            print(f"Timeout: {time_out_max}")
+            time_out_max -= 1
             
             #   Verifica de o resultado do aguardo do timeout expirou, ou não.
-            if result == win32event.WAIT_TIMEOUT:
+            if time_out_max <= 0:
                 print("Timeout expirou. Terminando o processo.")
                 
                 break #   Caso tenha expirado, encerra o loop do tempo de cpu forçadamente
 
             time.sleep(1) # Aguarde 1 segundo antes de verificar novamente
         
+        if total_cpu_time >self.tempo_cpu:
+            print(f'QUOTA TEMPO TOTAL DE CPU EXPIRADO.\n\n Tempo restante: {self.tempo_cpu - total_cpu_time}')
+        else:
+            print(f'Tempo restante: {self.tempo_cpu - total_cpu_time}')
         # Termina o processo.
         win32api.TerminateProcess(proc_handle, 1)
         win32api.CloseHandle(proc_handle)
@@ -71,6 +77,6 @@ if __name__ == "__main__":
     tempo_cpu = int(input("Digite um tempo máximo de CPU para o programa: "))
     timeout = int(input("Digite um tempo máximo de execução do programa: "))
 
-    monitoramento = MonitoringSoftware(software, timeout*1000, tempo_cpu)
+    monitoramento = MonitoringSoftware(software, timeout, tempo_cpu)
     monitoramento.monitorar_cpu()
     
