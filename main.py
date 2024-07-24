@@ -11,8 +11,7 @@ class MonitoringSoftware:
         self.timeout = timeout
         self.tempo_cpu = tempo_cpu
     
-    def abrir_programa(self): #      Essa é a função principal, que inicia o processo (abre o programa)
-        #   Inicia o processo (abre o programa)
+    def abrir_programa(self): # Essa é a função principal, que inicia o processo (abre o programa)
         return win32process.CreateProcess(
             self.software,
             None,
@@ -25,7 +24,7 @@ class MonitoringSoftware:
             win32process.STARTUPINFO()
         )
 
-    def monitorar_cpu(self):
+    def monitorar_cpu(self): # Essa é a função que roda um loop que monitora o programa
         process_info = self.abrir_programa()
         
         #   Pega as informações do processo
@@ -68,8 +67,10 @@ class MonitoringSoftware:
 
 if __name__ == "__main__":
     
-    process_name = str(input("Digite o caminho do processo: ")) #   Testar com o seguinte diretório: C:\\Windows\\System32\\notepad.exe
+    software = str(input("Digite o caminho do processo: ")) #   Testar com o seguinte diretório: C:\\Windows\\System32\\notepad.exe
     tempo_cpu = int(input("Digite um tempo máximo de CPU para o programa: "))
     timeout = int(input("Digite um tempo máximo de execução do programa: "))
-    monitoramento = MonitoringSoftware(process_name, timeout*1000, tempo_cpu)
+
+    monitoramento = MonitoringSoftware(software, timeout*1000, tempo_cpu)
     monitoramento.monitorar_cpu()
+    
