@@ -40,7 +40,7 @@ class MonitoringSoftware:
         result = win32event.WaitForSingleObject(proc_handle, self.timeout)
         
         #   Loop que monitora o tempo de CPU, e encerra o programa caso chegue ao máximo.
-        while (total_cpu_time < self.tempo_cpu):
+        while True:
             #   Pega a soma do tempo de CPU para user e system e armazena no total
             cpu_time_user = process.cpu_times().user
             cpu_time_system = process.cpu_times().system
@@ -51,25 +51,24 @@ class MonitoringSoftware:
             if result == win32event.WAIT_TIMEOUT:
                 print("Timeout expirou. Terminando o processo.")
                 
-                #   Caso tenha expirado, encerra o loop do tempo de cpu forçadamente
-                break
+                break #   Caso tenha expirado, encerra o loop do tempo de cpu forçadamente
 
-            # Aguarde 1 segundo antes de verificar novamente
-            time.sleep(1)
+            time.sleep(1) # Aguarde 1 segundo antes de verificar novamente
         
         # Termina o processo.
         win32api.TerminateProcess(proc_handle, 1)
-        print('Medição encerrada.')
         win32api.CloseHandle(proc_handle)
         win32api.CloseHandle(thread_handle)
+
+        # Printa os resultados no terminal
+        print('Medição encerrada.')
+        print(f'Tempo de CPU total consumido: {total_cpu_time}')
         
 
 
-    
-
 if __name__ == "__main__":
     
-    process_name = str(input("Digite o nome do processo: ")) #   Testar com o seguinte diretório: C:\\Windows\\System32\\notepad.exe
+    process_name = str(input("Digite o caminho do processo: ")) #   Testar com o seguinte diretório: C:\\Windows\\System32\\notepad.exe
     tempo_cpu = int(input("Digite um tempo máximo de CPU para o programa: "))
     timeout = int(input("Digite um tempo máximo de execução do programa: "))
     monitoramento = MonitoringSoftware(process_name, timeout*1000, tempo_cpu)
