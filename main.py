@@ -38,7 +38,7 @@ class MonitoringSoftware:
         #   Aguarda o fechamento do programa, ou encerramento pelo timeout.
         time_out_max = self.timeout
         #   Loop que monitora o tempo de CPU, e encerra o programa caso chegue ao máximo.
-        while True:
+        while time_out_max >= 0:
             #   Pega a soma do tempo de CPU para user e system e armazena no total
             
             cpu_time_user = process.cpu_times().user
@@ -47,12 +47,6 @@ class MonitoringSoftware:
             print(f"Tempo de CPU: {total_cpu_time}")
             print(f"Timeout: {time_out_max}")
             time_out_max -= 1
-            
-            #   Verifica de o resultado do aguardo do timeout expirou, ou não.
-            if time_out_max <= 0:
-                print("Timeout expirou. Terminando o processo.")
-                
-                break #   Caso tenha expirado, encerra o loop do tempo de cpu forçadamente
 
             time.sleep(1) # Aguarde 1 segundo antes de verificar novamente
         
