@@ -4,11 +4,15 @@ import win32event
 import time
 import win32api
 
+###################### O QUE FAZER ####################
+# alterar condição de encerramento do loop para verificar se o processo ainda existe
+# adicionar algo como um "wait" para aguardar o encerramento do processo
+
 class MonitoringSoftware:
 
-    def __init__(self, software, software_name, timeout, tempo_cpu): #     Inicializa o objeto com o diretório, timeout e tempo de cpu inseridos pelo usuário.
+    def __init__(self, software, timeout, tempo_cpu): #     Inicializa o objeto com o diretório, timeout e tempo de cpu inseridos pelo usuário.
         self.software = software
-        self.software_name = software_name
+        #self.software_name = software_name
         self.timeout = timeout
         self.tempo_cpu = tempo_cpu
     
@@ -25,11 +29,13 @@ class MonitoringSoftware:
             win32process.STARTUPINFO()
         )
 
-    def get_pid_by_name(self):
+        '''
+        def get_pid_by_name(self):
         for proc in psutil.process_iter(['pid', 'name']):
             if self.software_name == proc.info['name']:
                 return proc.pid
         return None
+        '''
 
     def monitorar_cpu(self): # Essa é a função que roda um loop que monitora o programa
         process_info = self.abrir_programa()
@@ -38,7 +44,7 @@ class MonitoringSoftware:
         proc_handle, thread_handle, proc_id, thread_id = process_info
         
         #   Inicia a coleta de dados do processo inicializado.
-        process = psutil.Process(self.get_pid_by_name())
+        process = psutil.Process(proc_id)
         
         total_cpu_time = 0
         
@@ -74,11 +80,12 @@ class MonitoringSoftware:
 
 if __name__ == "__main__":
     
-    software_name = str(input("Digite o nome do processo: "))
+    #software_name = str(input("Digite o nome do processo: "))
     software = str(input("Digite o caminho do processo: ")) #   Testar com o seguinte diretório: C:\\Windows\\System32\\notepad.exe
     tempo_cpu = int(input("Digite um tempo máximo de CPU para o programa: "))
     timeout = int(input("Digite um tempo máximo de execução do programa: "))
 
-    monitoramento = MonitoringSoftware(software, software_name, timeout, tempo_cpu)
+    monitoramento = MonitoringSoftware(software, timeout, tempo_cpu)
     monitoramento.monitorar_cpu()
-    
+
+
