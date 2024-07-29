@@ -4,7 +4,6 @@ import time
 import subprocess
 
 
-
 class MonitoringSoftware():
     def __init__(self, software, timeout): #     Inicializa o objeto com o diretório, timeout e tempo de cpu inseridos pelo usuário.
         self.software = software
@@ -15,18 +14,12 @@ class MonitoringSoftware():
     def abrir_programa(self):
         return subprocess.Popen([self.software])
 
-    def get_pid_by_name(self):
-        for proc in psutil.process_iter(['pid', 'name']):
-            if proc.info['name'] == self.software:
-                return proc
-        return None
-    
     def monitorar_cpu(self):
         
-        self.abrir_programa()
+        proc = self.abrir_programa()
+
         time.sleep(2)
-        proc = self.get_pid_by_name() #pega o pid do processo com base o nome fornecido pelo usuário
-        
+
         process = psutil.Process(proc.pid)
 
         while self.timeout >= 0:
@@ -54,11 +47,11 @@ class MonitoringSoftware():
 software = str(input("\n\nDigite o nome do processo: "))
 timeout = int(input("Digite um tempo máximo de execução do programa (0 caso não queira tempo máximo): "))
 
-monitoramento = MonitoringSoftware(software  + ".exe", timeout)
+monitoramento = MonitoringSoftware(software, timeout)
 monitoramento.monitorar_cpu()
 
 
 ################################## ALGUNS DIRETÓRIOS DO MEU PC ###############################
-# C:\\Windows\\System32\\notepad.exe
 # C:\Program Files\CPUID\HWMonitor\HWMonitor
 # C:\Users\samue\AppData\Local\Discord\app-1.0.9155\Discord
+# C:\Program Files\Windows NT\Accessories\wordpad.exe
