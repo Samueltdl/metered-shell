@@ -22,7 +22,10 @@ class MonitoringSoftware():
 
         process = psutil.Process(proc.pid)
 
-        while self.timeout >= 0:
+        while process.is_running():
+
+            if self.timeout <= 0:
+                process.terminate()
 
             if not process.is_running():
                 print("\n\n--------------ATENÇÃO---------------")
