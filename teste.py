@@ -47,7 +47,7 @@ class MonitoringSoftware():
         print(f"tempo de cpu total consumido: {total_cpu_time}\n\n")
 
 
-software = str(input("\n\nDigite o nome do processo: "))
+software = str(input("\n\nDigite o caminho do processo: "))
 timeout = int(input("Digite um tempo máximo de execução do programa (0 caso não queira tempo máximo): "))
 
 monitoramento = MonitoringSoftware(software, timeout)
