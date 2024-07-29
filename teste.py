@@ -9,7 +9,7 @@ class MonitoringSoftware():
         self.timeout = timeout
         self.max_cpu = max_cpu
 
-    def abrir_programa(self): # método que abre o programa do caminho especificado
+    def open_program(self): # método que abre o programa do caminho especificado
         return subprocess.Popen([self.software])
 
     def reestart(self):
@@ -18,9 +18,9 @@ class MonitoringSoftware():
         self.monitorar_cpu()
         
     
-    def monitorar_cpu(self): # método que roda um loop que fica monitorando o programa
+    def monitor_cpu(self): # método que roda um loop que fica monitorando o programa
         
-        proc = self.abrir_programa()
+        proc = self.open_program()
         print('\n\n...')
         time.sleep(1)
         print('....')
@@ -80,7 +80,7 @@ timeout = int(input("\nDigite um tempo máximo de execução do programa (0 caso
 max_cpu = int(input("\nDigite uma quota máxima de tempo de CPU para o programa: "))
 
 monitoramento = MonitoringSoftware(software, timeout, max_cpu)
-monitoramento.monitorar_cpu()
+monitoramento.monitor_cpu()
 
 
 ################################## ALGUNS DIRETÓRIOS DO MEU PC ###############################
