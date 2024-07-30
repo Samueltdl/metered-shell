@@ -15,7 +15,7 @@ class MonitoringSoftware():
     def reestart(self):
         new_timeout = int(input("\nDigite um novo tempo máximo de execução do programa (0 caso não queira tempo máximo): "))
         self.timeout = new_timeout
-        self.monitorar_cpu()
+        self.monitor_cpu()
         
     
     def monitor_cpu(self): # método que roda um loop que fica monitorando o programa
@@ -89,3 +89,5 @@ monitoramento.monitor_cpu()
 # C:\Users\samue\AppData\Local\Discord\app-1.0.9155\Discord
 # C:\Program Files\Windows NT\Accessories\wordpad.exe
 # C:\Program Files (x86)\Steam\steam.exe
+# C:\Users\vitor\AppData\Local\Programs\Opera GX\opera.exe
+# C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe
