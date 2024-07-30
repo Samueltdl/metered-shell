@@ -91,3 +91,4 @@ monitoramento.monitor_cpu()
 # C:\Program Files (x86)\Steam\steam.exe
 # C:\Users\vitor\AppData\Local\Programs\Opera GX\opera.exe
 # C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe
+# C:\Program Files\Google\Chrome\Application\chrome.exe
