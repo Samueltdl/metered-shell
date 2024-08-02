@@ -2,25 +2,18 @@ import psutil
 import time
 import subprocess
 
-
 class MonitoringSoftware():
+
     def __init__(self, software, timeout, max_cpu): # Inicializa o objeto com o diretório, timeout e tempo de cpu inseridos pelo usuário.
         self.software = software
         self.timeout = timeout
         self.max_cpu = max_cpu
 
     def open_program(self): # método que abre o programa do caminho especificado
-        return subprocess.Popen([self.software])
+        proc = subprocess.Popen([self.software]) # método da subprocess que inicia um processo
 
-    def reestart(self):
-        new_timeout = int(input("\nDigite um novo tempo máximo de execução do programa (0 caso não queira tempo máximo): "))
-        self.timeout = new_timeout
-        self.monitor_cpu()
-        
-    
-    def monitor_cpu(self): # método que roda um loop que fica monitorando o programa
-        
-        proc = self.open_program()
+        # sleep adicionado só para dar tempo de o programa iniciar completamente (pode ser pouco tempo se o programa demora para iniciar)
+        print('\n\nAguardando o início do processo')
         print('\n\n...')
         time.sleep(1)
         print('....')
@@ -28,9 +21,18 @@ class MonitoringSoftware():
         print('.....')
         time.sleep(1)
         print('......\n\n')
-        # sleep adicionado só para dar tempo de o programa iniciar completamente (pode ser pouco tempo se o programa demora para iniciar)
+        
+        return proc
 
-        process = psutil.Process(proc.pid)
+    def reestart(self): # método chamado para reiniciar o monitoramento caso seja possível
+        new_timeout = int(input("\nDigite um novo tempo máximo de execução do programa (0 caso não queira tempo máximo): "))
+        self.timeout = new_timeout
+        self.monitor_cpu()
+    
+    def monitor_cpu(self): # método que roda um loop que fica monitorando o programa
+        proc = self.open_program()
+
+        process = psutil.Process(proc.pid) # pegando o processo com o psutil para monitorar
         
         time_out = self.timeout
         if time_out == 0:
@@ -39,40 +41,40 @@ class MonitoringSoftware():
         while True:
             if not process.is_running(): # vericica se o programa não foi fechado forçadamente
                 print("\n\n--------------ATENÇÃO---------------")
-                print("\nPrograma encerrado antes de terminar a a medição!")
+                print("\nProcesso encerrado antes de terminar a a medição!")
                 break
-
-            if type(time_out) != bool:
-                if time_out <= 0: # condição que encerra o programa automaticamente caso tenha atingido o tempo máximo
-                    process.terminate()
-                    break
-                
+ 
             user_time = process.cpu_times().user
             system_time = process.cpu_times().system
             total_cpu_time = user_time + system_time
             
             print(f"Tempo de CPU (user): {user_time}")
-            print(f"Tempo de CPU (system): {system_time}")
+            print(f"Tempo de CPU (system): {system_time}\n\n")
 
-            # Aguarde 1 segundo antes de verificar novamente
-            time.sleep(1)
-            
             if type(time_out) != bool:
+                if time_out <= 0: # condição que encerra o programa automaticamente caso tenha atingido o tempo máximo
+                    process.terminate()
+                    break
                 time_out -= 1
+            
+            time.sleep(1) # Aguarde 1 segundo antes de verificar novamente
 
-        print(f'\n\n---------------------------------------------')
-        print(f"\nPrograma finalizado.\n\n")
+        self.end_program(total_cpu_time)
+         
+    def end_program(self, total_cpu_time): # metodo chamado para encerrar o programa, ou reiciá-lo caso seja possível
+        print(f'---------------------------------------------')
+        print(f"\nProcesso finalizado.\n\n")
         print(f"Tempo de CPU total consumido: {total_cpu_time}\n\n")
         
         if total_cpu_time < self.max_cpu:
             print(f'Você ainda tem quota de tempo de CPU restante: {self.max_cpu - total_cpu_time}\n')
-            reestart = int(input("\nDeseja reiniciar o monitoramento? (0: não, 1: sim): "))
+            reestart = int(input("\nDeseja continuar o monitoramento? (0: não, 1: sim): "))
             if reestart == 1: 
                 self.max_cpu -= total_cpu_time
                 self.reestart()
         else:
             print(f'\nQuota de tempo de CPU excedida em: {total_cpu_time - self.max_cpu}')
-            
+            print(f'\nNão é possível continuar o monitoramento!\n\n')
 
 
 software = str(input("\nDigite o caminho do processo: "))
