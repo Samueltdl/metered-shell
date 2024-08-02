@@ -41,7 +41,7 @@ class MonitoringSoftware():
         while True:
             if not process.is_running(): # vericica se o programa não foi fechado forçadamente
                 print("\n\n--------------ATENÇÃO---------------")
-                print("\nProcesso encerrado antes de terminar a a medição!")
+                print("\nProcesso encerrado antes de terminar a a medição!\n")
                 break
  
             user_time = process.cpu_times().user
